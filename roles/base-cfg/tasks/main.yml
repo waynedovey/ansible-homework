@@ -1,0 +1,20 @@
+---
+# Initial setup
+
+- name: enable repo
+  template:
+    src: repos_template.j2
+    dest: /etc/yum.repos.d/open_three-tier-app.repo
+    mode: 0644
+
+- name: setup hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: install tools and packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - httpie
+    - python-pip

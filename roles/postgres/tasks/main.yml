@@ -1,0 +1,30 @@
+---
+- name: install postgres
+  package:
+    name: postgresql-server
+    state: latest
+  tags:
+    -postgres
+
+- name: enable postgres at boot
+  service:
+    name: postgresql
+    enabled: yes
+  tags:
+    -postgres
+
+- name: See if postgres has already been initialize
+  stat:
+    path: /var/lib/pgsql/data
+  register: postgres_version
+  tags:
+    -postgres
+
+# only run the next 2 tasks once!
+- block:
+   - name: initilize postgres
+     command: postgresql-setup initdb
+     notify: start_postgres
+  when: not postgres_version.stat.exists
+  tags:
+    -postgres

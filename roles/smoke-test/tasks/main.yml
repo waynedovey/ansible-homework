@@ -1,0 +1,9 @@
+---
+- name: check URL works
+  uri:
+    url: "http://localhost"
+#    url: "http://{{ item }}.{{ domain }}"
+  with_items: "{{ groups['frontends'] }}"
+#  delegate_to: localhost
+  tags:
+    - smoke-test

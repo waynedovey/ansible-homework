@@ -1,0 +1,27 @@
+---
+
+- name: install {{ package }}
+  yum:
+    name: "{{ package }}"
+    state: latest
+
+- name: enable {{ package }}
+  service:
+    name: "{{ package }}"
+    enabled: yes
+
+- name: create tomcat directory
+  file:
+    path: "{{ tomcat_root }}"
+    state: directory
+
+- name: copy index.html to tomcat root
+  template:
+    src: index.html.j2
+    dest: "{{ tomcat_root }}/index.html"
+    mode: 0644
+
+- name: restart tomcat
+  service:
+    name: "{{ package }}"
+    state: restarted

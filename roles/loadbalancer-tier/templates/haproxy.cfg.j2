@@ -1,0 +1,31 @@
+{{ ansible_managed | comment }}
+global
+  log /dev/log  local0
+  log /dev/log  local1 notice
+  stats socket /var/lib/haproxy/stats level admin
+  chroot /var/lib/haproxy
+  user haproxy
+  group haproxy
+  daemon
+
+defaults
+  log global
+  mode  http
+  option  httplog
+  option  dontlognull
+        timeout connect 5000
+        timeout client 50000
+        timeout server 50000
+
+frontend hafrontend
+    bind *:80
+    mode http
+    default_backend app-servers
+
+backend app-servers
+    mode http
+    balance roundrobin
+    option forwardfor
+{% for server in groups.apps %}
+    server {{ server.split('.')[0]  }} {{server}}:8080 cookie {{ server.split('.')[0] }} check
+{% endfor %}

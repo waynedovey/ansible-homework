@@ -1,0 +1,7 @@
+---
+# handlers file for loadbalancer-tier
+
+- name: start tomcat
+  service:
+    name: tomcat
+    state: started

@@ -1,0 +1,10 @@
+[all:vars]
+ansible_user=wdovey-redhat.com
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+[bastion_tower]
+bastion.dd80.example.opentlc.com
+
+[workstation]
+workstation-e9c2.rhpds.opentlc.com

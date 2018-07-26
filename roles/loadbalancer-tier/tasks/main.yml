@@ -1,0 +1,23 @@
+---
+
+- name: install {{ package }}
+  yum:
+    name: "{{ package }}"
+    state: latest
+
+- name: enable {{ package }} at boot
+  service:
+    name: "{{ package }}"
+    enabled: yes
+
+- name: configure haproxy 
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    mode: 0644
+
+- name: start {{ package }}
+  service:
+    name: "{{ package }}"
+    state: restarted
+

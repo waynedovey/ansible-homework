@@ -1,0 +1,5 @@
+[osp]
+hosts1 ansible_host=10.10.10.9 
+hosts2 ansible_host=10.10.10.4 
+hosts3 ansible_host=10.10.10.17 
+hosts4 ansible_host=10.10.10.15 

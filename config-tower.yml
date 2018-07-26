@@ -1,0 +1,7 @@
+- hosts: bastion_tower
+  gather_facts: false 
+  become: yes 
+  vars:
+    tower_GUID: dd80
+  roles:
+    - {name: config-tower, tag: config-tower}

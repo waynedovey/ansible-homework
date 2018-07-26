@@ -1,0 +1,4 @@
+# vars file for base-cfg
+custom_repo: "http://admin.na.shared.opentlc.com/repos/ocp/3.6"
+epel_base_url: "http://download.fedoraproject.org"
+epel_mirror_url: "https://mirrors.fedoraproject.org"

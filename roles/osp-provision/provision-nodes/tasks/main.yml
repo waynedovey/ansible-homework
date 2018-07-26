@@ -1,0 +1,3 @@
+---
+# tasks file for provision-nodes
+- include_tasks: provision-nodes.yml

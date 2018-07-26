@@ -1,0 +1,6 @@
+---
+
+- name: start {{ package }}
+  service:
+    name: tomcat
+    state: started
