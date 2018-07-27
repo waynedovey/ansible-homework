@@ -1,0 +1,17 @@
+# Playbook to setup workstation and create osp network, router, SG and ssh keypair
+
+- hosts: localhost
+  vars:
+    OSP_GUID: e9c2
+  gather_facts: false
+  tasks:
+  - name: Create workstation inventory
+    add_host:
+       name: "workstation-{{OSP_GUID}}.rhpds.opentlc.com"
+       group: workstation
+
+- hosts: workstation
+  become: yes
+  gather_facts: false
+  roles:
+    - {name: delete-osp-nodes, tag: delete-osp-nodes}
