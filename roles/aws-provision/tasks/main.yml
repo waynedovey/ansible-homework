@@ -29,15 +29,14 @@
     dest: /root/credential.rc
     mode: 0755
 
-# Fix the existing shell scripts to reference jq command with bin/jq
+# fix 
 - name: fix scripts
   shell: "sed -i 's/ jq/ bin\\/jq/g' {{ item }}"
   with_items:
     - /root/common.sh
     - /root/order_svc.sh
 
-# Using this script will always deploy environments in the us-east-1 region.
-# TODO: this shell task is not working yet!
+# Deploy env
 - name: order service on opentlc
   shell: source /root/credential.rc; /root/order_svc.sh -y -c 'OPENTLC Automation' -i 'Three Tier Application' -t 1
   args:
