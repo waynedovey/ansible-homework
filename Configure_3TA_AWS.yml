@@ -1,0 +1,41 @@
+- hosts: localhost
+  vars:
+    GUID: ed19
+  tasks:
+  - name: Create bastion inventory
+    add_host:
+       name: "bastion.{{ GUID }}.example.opentlc.com"
+       group: bastion
+
+- hosts: bastion
+  gather_facts: true
+  become: yes
+  roles:
+    - {name: osp-cluster, tag: osp-cluster}
+
+- name: enable the load balancer tier
+  hosts: frontends
+  become: yes
+  roles:
+    - {name: base-cfg , tag: base-cfg}
+    - {name: loadbalancer-tier, tags: [loadbalancer, haproxy]}
+
+- name: setup app tier
+  hosts: apps
+  become: yes
+  roles:
+    - {name: base-cfg , tag: base-cfg}
+    - {name: application-tier, tags: [application, tomcat]}
+
+- name: setup database tier
+  hosts: appdbs
+  become: yes
+  roles:
+    - {name: base-cfg , tag: base-cfg}
+    - {name: postgres, tags: [db, postgres]}
+
+- name: Ensure app is working
+  hosts: frontends
+  become: yes
+  roles:
+    - {name: smoke-test, tags: smoke-test}
