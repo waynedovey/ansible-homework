@@ -1,5 +1,4 @@
 - hosts: localhost
-  gather_facts: false
   vars:
     OSP_GUID: e9c2
   tasks:
@@ -9,13 +8,12 @@
        group: workstation
 
 - hosts: workstation
-  gather_facts: false
+  gather_facts: true
   become: yes
   roles:
     - {name: osp-cluster, tag: osp-cluster}
 
 - name: enable the load balancer tier
-  gather_facts: false
   hosts: frontends
   become: yes
   roles:
@@ -23,7 +21,6 @@
     - {name: loadbalancer-tier, tags: [loadbalancer, haproxy]}
 
 - name: setup app tier
-  gather_facts: false
   hosts: apps
   become: yes
   roles:
@@ -31,7 +28,6 @@
     - {name: application-tier, tags: [application, tomcat]}
 
 - name: setup database tier
-  gather_facts: false
   hosts: appdbs
   become: yes
   roles:
@@ -39,7 +35,6 @@
     - {name: postgres, tags: [db, postgres]}
 
 - name: Ensure app is working
-  gather_facts: false
   hosts: frontends
   become: yes
   roles:
