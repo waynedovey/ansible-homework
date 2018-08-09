@@ -1,0 +1,73 @@
+---
+- name: Get GUID 
+  shell: 'hostname | cut -f2 -d.'
+  register: guid
+  tags:
+    - guid
+
+- name: Ensure .ssh directory exists
+  file:
+    state: directory
+    mode: 0700
+    path: /home/wdovey-redhat.com/.ssh/
+
+- name: Deploy key to bastion user
+  become: true
+  copy:
+    src: "/root/.ssh/{{ ec2_guid.stdout }}key.pem"
+    dest: "{{ item }}"
+    remote_src: true
+    mode: 0444
+    owner: wdovey-redhat.com
+    group: wdovey-redhat.com
+  with_items:
+    - "/home/wdovey-redhat.com/.ssh/deploy_key.pem"
+    - "/tmp/deploy_key.pem"
+  tags:
+    - ec2_bastion_key
+
+- name: Remove any old deploy key
+  delegate_to: localhost
+  file:
+    state: absent
+    path: /tmp/deploy_key.pem
+  tags:
+    - pull_deploy_key
+
+- name: Fetch deploy key locally
+  fetch:
+    src: /home/wdovey-redhat.com/.ssh/deploy_key.pem
+    dest: /tmp/
+    flat: true
+  tags:
+    - pull_deploy_key
+
+- name: Fix key permissions
+  become: true
+  file:
+    path: "/home/wdovey-redhat.com/.ssh/deploy_key.pem"
+    state: file
+    mode: 0400
+    owner: wdovey-redhat.com
+    group: wdovey-redhat.com
+  tags:
+    - ec2_bastion_key
+
+- name: Fix key permissions
+  become: true
+  file:
+    path: "/tmp/deploy_key.pem"
+    state: file
+    mode: 0644
+    owner: wdovey-redhat.com
+    group: wdovey-redhat.com
+  tags:
+    - ec2_bastion_key
+
+- name: Setup ssh config template
+  template:
+    src: sshconfig.j2
+    dest: /home/wdovey-redhat.com/.ssh/config
+    mode: 0600
+  tags:
+    - setup_sshconfig

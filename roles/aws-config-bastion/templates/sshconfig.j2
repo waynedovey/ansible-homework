@@ -1,0 +1,12 @@
+Host *.{{ guid.stdout }}.example.opentlc.com
+ User ec2-user
+ IdentityFile ~/.ssh/deploy_key.pem
+ StrictHostKeyChecking no
+
+{% for instance in groups['all'] %}
+Host {{ instance }}
+ User ec2-user
+ IdentityFile ~/.ssh/deploy_key.pem
+ StrictHostKeyChecking no
+{% endfor %}
+

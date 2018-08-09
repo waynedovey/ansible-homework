@@ -1,0 +1,8 @@
+---
+
+- name: Configure the bastion host
+  hosts: tag_AnsibleGroup_bastions
+  roles:
+    - aws-config-bastion
+  tags:
+    - aws-bastionconfig
